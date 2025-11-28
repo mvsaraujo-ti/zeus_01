@@ -1,0 +1,9 @@
+﻿{
+  "qdrant_host": "192.168.0.100",
+  "qdrant_port": 6333,
+  "ollama_base_url": "http://localhost:11434",
+  "allowed_origins": [
+    "http://localhost",
+    "http://127.0.0.1"
+  ]
+}

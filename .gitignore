@@ -1,0 +1,54 @@
+# -------------------------
+# VENV / PYTHON
+# -------------------------
+venv/
+*/venv/
+*.pyc
+__pycache__/
+**/__pycache__/
+
+# -------------------------
+# QDRANT DATA
+# -------------------------
+qdrant_data/
+*/qdrant_data/
+backend/qdrant_data/
+
+# -------------------------
+# LOGS / TEMP
+# -------------------------
+logs/
+*.log
+*.tmp
+*.temp
+
+# -------------------------
+# MODEL FILES / OLLAMA
+# -------------------------
+ollama_data/
+*/ollama_data/
+
+# -------------------------
+# SYSTEM FILES
+# -------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -------------------------
+# ENV FILES (caso você crie)
+# -------------------------
+.env
+.env.local
+
+# -------------------------
+# EXTENSION BUILDS
+# -------------------------
+extension/dist/
+extension/build/
+extension/*.zip
+
+# -------------------------
+# ARTICLES (se quiser ocultar)
+# -------------------------
+# articles/*.md
