@@ -15,13 +15,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Aceitação flexível: message OU question
+# Agora aceita: message, question e text
 class ChatRequest(BaseModel):
     message: str | None = None
     question: str | None = None
+    text: str | None = None
 
     def get_text(self):
-        return self.message or self.question
+        return self.text or self.message or self.question
+
 
 
 @app.get("/health")

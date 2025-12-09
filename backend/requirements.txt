@@ -1,6 +1,15 @@
 ﻿fastapi
-uvicorn[standard]
+uvicorn
+numpy
+sentence-transformers
+transformers
+torch
+qdrant-client
 httpx
+requests
+python-dotenv
+jinja2
+aiofiles
 websockets
 pydantic
-python-dotenv
+typing_extensions
