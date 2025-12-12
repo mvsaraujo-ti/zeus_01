@@ -1,57 +1,52 @@
-import os
-import uuid
-from sentence_transformers import SentenceTransformer
-from qdrant_client import QdrantClient
-from qdrant_client.models import VectorParams, Distance
+import sys, os, zlib
 
-COLLECTION = "zeus_knowledge"
-ARTICLES_DIR = r"D:\IA-ZEUS\Zeus.00\articles"
+# Corrigir caminho do backend para importar app.*
+BACKEND_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend"))
+sys.path.insert(0, BACKEND_PATH)
 
-embedder = SentenceTransformer("all-MiniLM-L6-v2")
-qdrant = QdrantClient(host="localhost", port=6333)
+from app.embedder import embed_text
+from app.qclient import upsert_point
 
-# 🔥 limpar coleção ANTES de indexar
-if qdrant.collection_exists(COLLECTION):
-    print("Apagando coleção antiga...")
-    qdrant.delete_collection(COLLECTION)
+ARTICLES_DIR = "/home/zeus/DEV/Wiki-NHD/articles"
 
-qdrant.create_collection(
-    collection_name=COLLECTION,
-    vectors_config=VectorParams(size=384, distance=Distance.COSINE)
-)
+
+def filename_to_id(filename: str) -> int:
+    """Gera um ID numérico único baseado no nome do arquivo."""
+    return zlib.crc32(filename.encode("utf-8"))
+
 
 def index_articles():
-    files = os.listdir(ARTICLES_DIR)
+    files = [f for f in os.listdir(ARTICLES_DIR) if f.endswith(".md")]
+    print("\n🔍 Carregando artigos da Wiki NHD...")
+    print(f"📄 {len(files)} artigos encontrados.\n")
 
     for filename in files:
-        if not filename.lower().endswith((".md", ".txt")):
-            continue
-
         path = os.path.join(ARTICLES_DIR, filename)
 
-        with open(path, "r", encoding="utf-8") as f:
-            text = f.read()
+        with open(path, "r", encoding="utf-8") as file:
+            text = file.read()
 
-        try:
-            vector = embedder.encode(text).tolist()
-        except Exception as e:
-            print(f"ERRO ao processar {filename}: {e}")
-            continue
+        print(f"🔎 Indexando: {filename}")
 
-        doc_id = str(uuid.uuid4())
+        vector = embed_text(text).tolist()
 
-        qdrant.upsert(
-            collection_name=COLLECTION,
-            points=[{
-                "id": doc_id,
-                "vector": vector,
-                "payload": {"text": text, "file": filename}
-            }]
+        payload = {
+            "file": filename,
+            "text": text
+        }
+
+        point_id = filename_to_id(filename)
+
+        upsert_point(
+            point_id=point_id,
+            vector=vector,
+            payload=payload
         )
 
-        print(f"Indexado: {filename}")
+        print(f"✔️ Indexado: {filename} (ID: {point_id})\n")
 
-    print("Indexação concluída! 🚀")
+    print("🎉 Concluído! Zeus agora usa a Wiki NHD como base de conhecimento.")
+
 
 if __name__ == "__main__":
     index_articles()

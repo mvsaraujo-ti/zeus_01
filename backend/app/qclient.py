@@ -1,6 +1,7 @@
 from qdrant_client import QdrantClient
+from qdrant_client.http import models as rest
 
-# Qdrant local no Windows
+# Qdrant local no Linux
 QDRANT_HOST = "localhost"
 QDRANT_PORT = 6333
 
@@ -9,6 +10,10 @@ client = QdrantClient(
     port=QDRANT_PORT
 )
 
+
+# -----------------------------
+# 🔍 BUSCA VETORIAL
+# -----------------------------
 def search(vector, limit=3):
     response = client.query_points(
         collection_name="zeus_knowledge",
@@ -25,3 +30,20 @@ def search(vector, limit=3):
         })
 
     return results
+
+
+# -----------------------------
+# 🧩 INSERIR / ATUALIZAR DOCUMENTO
+# -----------------------------
+def upsert_point(point_id, vector, payload):
+
+    client.upsert(
+        collection_name="zeus_knowledge",
+        points=[
+            rest.PointStruct(
+                id=point_id,
+                vector=vector,
+                payload=payload
+            )
+        ]
+    )

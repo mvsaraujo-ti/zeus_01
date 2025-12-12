@@ -1,7 +1,7 @@
 import httpx
 
 OLLAMA_URL = "http://localhost:11434"
-MODEL_NAME = "llama3.2"
+MODEL_NAME = "qwen2.5:3b-instruct"
 
 async def ask_ollama(prompt: str) -> str:
     async with httpx.AsyncClient(timeout=120.0) as client:
