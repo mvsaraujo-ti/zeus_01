@@ -45,8 +45,8 @@ zeus_00/
 
 ## 1️⃣ Clonar o repositório
 
-git clone https://github.com/mvsaraujo-ti/zeus_00  
-cd zeus_00
+git clone https://github.com/mvsaraujo-ti/zeus_01  
+cd zeus_01
 
 ## 2️⃣ Subir o Qdrant (Banco Vetorial)
 
