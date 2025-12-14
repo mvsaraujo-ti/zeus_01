@@ -1,0 +1,41 @@
+#!/bin/bash
+
+echo "======================================"
+echo "🚀 Iniciando Zeus - PCZEUS (Casa)"
+echo "📁 Projeto: ~/DEV/zeus_01"
+echo "======================================"
+
+# Garantia de caminho
+cd /home/zeus/DEV/zeus_01 || {
+  echo "❌ Pasta zeus_01 não encontrada"
+  exit 1
+}
+
+# Ativar venv
+if [ ! -d "venv" ]; then
+  echo "❌ venv não encontrado. Abortando."
+  exit 1
+fi
+
+echo "🐍 Ativando ambiente virtual..."
+source venv/bin/activate
+
+# Validação
+PY=$(which python3)
+if [[ "$PY" != *"zeus_01/venv"* ]]; then
+  echo "❌ Ambiente virtual incorreto"
+  echo "Python atual: $PY"
+  exit 1
+fi
+
+echo "✅ venv correto ativo"
+
+# Subir Qdrant
+echo "🧠 Subindo Qdrant (Docker)..."
+docker compose up -d
+
+# Subir Zeus
+echo "🤖 Iniciando backend do Zeus..."
+cd backend || exit 1
+
+uvicorn app.main:app --host 0.0.0.0 --port 8600
